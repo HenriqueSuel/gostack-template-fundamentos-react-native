@@ -14,14 +14,14 @@ import {
   ProductContainer,
   ProductImage,
   ProductList,
-  ProductCard,
+  Product,
   ProductTitle,
   PriceContainer,
   ProductPrice,
   ProductButton,
 } from './styles';
 
-export interface Product {
+interface Product {
   id: string;
   title: string;
   image_url: string;
@@ -35,8 +35,9 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadProducts(): Promise<void> {
-      const result = await api.get('products');
-      setProducts(result.data);
+      const response = await api.get('products');
+
+      setProducts(response.data);
     }
 
     loadProducts();
@@ -56,8 +57,8 @@ const Dashboard: React.FC = () => {
           ListFooterComponentStyle={{
             height: 80,
           }}
-          renderItem={({ item }: { item: Product }) => (
-            <ProductCard>
+          renderItem={({ item }) => (
+            <Product>
               <ProductImage source={{ uri: item.image_url }} />
               <ProductTitle>{item.title}</ProductTitle>
               <PriceContainer>
@@ -69,7 +70,7 @@ const Dashboard: React.FC = () => {
                   <FeatherIcon size={20} name="plus" color="#C4C4C4" />
                 </ProductButton>
               </PriceContainer>
-            </ProductCard>
+            </Product>
           )}
         />
       </ProductContainer>

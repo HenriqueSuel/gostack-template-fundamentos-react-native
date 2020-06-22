@@ -7,7 +7,7 @@ import {
   Container,
   ProductContainer,
   ProductList,
-  ProductCard,
+  Product,
   ProductImage,
   ProductTitleContainer,
   ProductTitle,
@@ -27,7 +27,7 @@ import { useCart } from '../../hooks/cart';
 
 import formatValue from '../../utils/formatValue';
 
-export interface Product {
+interface Product {
   id: string;
   title: string;
   image_url: string;
@@ -47,21 +47,19 @@ const Cart: React.FC = () => {
   }
 
   const cartTotal = useMemo(() => {
-    const total = formatValue(
-      products
-        .map(({ price, quantity }) => price * quantity)
-        .reduce((acum, curr) => acum + curr, 0),
-    );
+    const totalSum = products.reduce((item, acc) => {
+      return item + acc.quantity * acc.price;
+    }, 0);
 
-    return total;
+    return formatValue(totalSum);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
-    const total = products
-      .map(({ quantity }) => quantity)
-      .reduce((acum, curr) => acum + curr, 0);
+    const totalItens = products.reduce((item, acc) => {
+      return item + acc.quantity;
+    }, 0);
 
-    return total;
+    return totalItens;
   }, [products]);
 
   return (
@@ -75,7 +73,7 @@ const Cart: React.FC = () => {
             height: 80,
           }}
           renderItem={({ item }: { item: Product }) => (
-            <ProductCard>
+            <Product>
               <ProductImage source={{ uri: item.image_url }} />
               <ProductTitleContainer>
                 <ProductTitle>{item.title}</ProductTitle>
@@ -107,7 +105,7 @@ const Cart: React.FC = () => {
                   <FeatherIcon name="minus" color="#E83F5B" size={16} />
                 </ActionButton>
               </ActionContainer>
-            </ProductCard>
+            </Product>
           )}
         />
       </ProductContainer>
